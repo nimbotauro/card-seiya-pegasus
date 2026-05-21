@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Fantasy 3d</title>
+    
+  </head>
+  <body class="m-0 bg-[#121214] font-sans text-[#e1e1e6] flex flex-col items-center min-h-screen p-4">
+
+  <nav class="w-full max-w-[320px] flex justify-between items-center mb-8 bg-[#202024] p-4 rounded-xl border border-[#323238]">
+    <span class="font-bold text-[#00adb5]">StudioFantasy3D</span>
+    <div class="bg-[#323238] px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+      🛒 Carrinho: 
+      <span id="contador-carrinho" class="text-[#00adb5]">0</span>
+    </div>
+  </nav>
+
+  <article class="bg-[#202024] p-6 rounded-xl border border-[#323238] max-w-[320px] shadow-2xl">
+    <img src="https://media.discordapp.net/attachments/1507080655404666892/1507080708881907933/WhatsApp_Image_2026-04-28_at_11.07.47_AM_2.jpeg?ex=6a1099c9&is=6a0f4849&hm=3a8cc68b7c605a81aac420e13ba360d13b53931cafeb04fbca22abd2620503df&=&format=webp&width=395&height=527" alt="Seiya de Pegasus" class="w-full h-64 object-cover rounded-lg mb-4">
+    
+    <header>
+      <h2 class="text-[#00adb5] text-2xl font-bold mb-2">Seiya de Pegasus 1/6</h2>
+    </header>
+    
+    <p class="text-[#a8a8b3] mb-6">Estatueta impressa em Resina de alta qualidade e pintada a mão.</p>
+    
+    <footer class="flex justify-between items-center">
+      <span class="text-xl font-bold text-white">R$ 750,00</span>
+      <button id="botao-comprar" class="hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors">Comprar</button>
+    </footer>
+  </article>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      
+      const botao = document.getElementById('botao-comprar');
+      // 1. Selecionamos o elemento de texto do contador
+      const contador = document.getElementById('contador-carrinho');
+      
+      // 2. Criamos a variável de "Estado" que começa em ZERO
+      let quantidadeNoCarrinho = 0;
+
+      function adicionarAoCarrinho() {
+        // Ação 1: Mudar o visual do botão (o que você já fez!)
+        botao.innerText = "Adicionado! 🛒";
+        botao.classList.remove('bg-[#00adb5]', 'hover:bg-[#007a80]');
+        botao.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        
+        // Ação 2: Somar +1 na nossa variável matemática
+        quantidadeNoCarrinho = quantidadeNoCarrinho + 1;
+        
+        // Ação 3: Atualizar o texto lá do topo com o novo valor da variável
+        contador.innerText = quantidadeNoCarrinho;
+      }
+
+      if (botao) {
+        botao.addEventListener('click', adicionarAoCarrinho);
+      }
+      
+    });
+  </script>
+
+</body>
+</html>
