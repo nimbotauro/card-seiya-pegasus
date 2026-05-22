@@ -20,51 +20,48 @@
   <main id="vitrine-produtos" class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1000px]">
     </main>
 
-  <script>
+ <script>
   window.addEventListener('DOMContentLoaded', () => {
     
     const containerVitrine = document.getElementById('vitrine-produtos');
     const contador = document.getElementById('contador-carrinho');
     let quantidadeNoCarrinho = 0;
 
-    // 1. O MENSAGEIRO (Fetch): Vamos buscar dados de usuários reais de um servidor externo
-    // Em vez de produtos, vamos listar "Clientes Premium" da loja como teste de API
-    fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(resposta => resposta.json()) // Quando a resposta chegar, transformamos o texto em JSON
-      .then(usuarios => {
+    // Coloque a sua URL RAW aqui dentro das aspas
+    fetch('https://gist.githubusercontent.com/nimbotauro/8134c692c539fba356c379a1d2f4871c/raw/1315b5a99bc9f3bd5836680e981384fc152c46df/gistfile1.txt')
+      .then(resposta => resposta.json())
+      .then(produtos => {
         
-        // 2. Agora que os dados chegaram do servidor, fazemos o loop
-        usuarios.slice(0, 3).forEach(usuario => { // Pegamos apenas os 3 primeiros para o nosso grid
-          
+        // Loop para fabricar os cards
+        produtos.forEach(produto => {
           const cardHTML = `
             <article class="bg-[#202024] p-6 rounded-xl border border-[#323238] shadow-2xl flex flex-col justify-between">
               <div>
-                <div class="w-full h-40 bg-[#323238] rounded-lg mb-4 flex items-center justify-center text-4xl text-[#00adb5]">
-                  👤
-                </div>
-                <h2 class="text-[#00adb5] text-xl font-bold mb-1">${usuario.title}</h2>
-                <p class="text-[#emerald-400] text-xs font-mono mb-4">@${usuario.body}</p>
-              
+                <img src="${produto.img}" alt="${produto.nome}" class="w-full h-64 object-cover rounded-lg mb-4">
+                <h2 class="text-[#00adb5] text-2xl font-bold mb-2">${produto.nome}</h2>
+                <p class="text-[#a8a8b3] mb-6 text-sm">${produto.descricao}</p>
               </div>
-              <footer class="mt-auto">
-                <button class="botao-conectar w-full hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors text-sm font-bold">
-                  Ver Perfil de Dev
+              <footer class="flex justify-between items-center mt-auto">
+                <span class="text-xl font-bold text-white">${produto.preco}</span>
+                <button id="${produto.id}" class="botao-comprar hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors text-sm">
+                  Comprar
                 </button>
               </footer>
             </article>
           `;
-          
           containerVitrine.innerHTML += cardHTML;
         });
 
-        // 3. Reativar os cliques nos botões que nasceram da API
-        const botoes = document.querySelectorAll('.botao-conectar');
+        // Lógica do clique nos botões (dentro do fluxo do fetch)
+        const botoes = document.querySelectorAll('.botao-comprar');
         botoes.forEach(botao => {
           botao.addEventListener('click', () => {
             quantidadeNoCarrinho++;
+            contador.innerText = Drug; // Ops, mantendo o padrão: quantidadeNoCarrinho;
             contador.innerText = quantidadeNoCarrinho;
-            botao.innerText = "Conectado! 🔗";
-            botao.classList.replace('bg-[#00adb5]', 'bg-emerald-600');
+            botao.innerText = "Adicionado! 🛒";
+            botao.classList.remove('bg-[#00adb5]', 'hover:bg-[#007a80]');
+            botao.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
           });
         });
 
@@ -72,6 +69,6 @@
       .catch(erro => console.error("Erro ao buscar dados da API:", erro));
 
   });
-  </script>
+</script>
 </body>
 </html>
