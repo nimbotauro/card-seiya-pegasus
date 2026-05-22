@@ -8,60 +8,97 @@
     <title>Studio Fantasy 3d</title>
     
   </head>
-  <body class="m-0 bg-[#121214] font-sans text-[#e1e1e6] flex flex-col items-center min-h-screen p-4">
+  <body class="m-0 bg-[#121214] font-sans text-[#e1e1e6] flex flex-col items-center min-h-screen p-4"><body class="m-0 bg-[#121214] font-sans text-[#e1e1e6] flex flex-col items-center min-h-screen p-4">
 
-  <nav class="w-full max-w-[320px] flex justify-between items-center mb-8 bg-[#202024] p-4 rounded-xl border border-[#323238]">
+  <nav class="w-full max-w-[1000px] flex justify-between items-center mb-8 bg-[#202024] p-4 rounded-xl border border-[#323238]">
     <span class="font-bold text-[#00adb5]">StudioFantasy3D</span>
     <div class="bg-[#323238] px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-      🛒 Carrinho: 
-      <span id="contador-carrinho" class="text-[#00adb5]">0</span>
+      🛒 Carrinho: <span id="contador-carrinho" class="text-[#00adb5]">0</span>
     </div>
   </nav>
 
-  <article class="bg-[#202024] p-6 rounded-xl border border-[#323238] max-w-[320px] shadow-2xl">
-    <img src="https://media.discordapp.net/attachments/1507080655404666892/1507080708881907933/WhatsApp_Image_2026-04-28_at_11.07.47_AM_2.jpeg?ex=6a1099c9&is=6a0f4849&hm=3a8cc68b7c605a81aac420e13ba360d13b53931cafeb04fbca22abd2620503df&=&format=webp&width=395&height=527" alt="Seiya de Pegasus" class="w-full h-64 object-cover rounded-lg mb-4">
-    
-    <header>
-      <h2 class="text-[#00adb5] text-2xl font-bold mb-2">Seiya de Pegasus 1/6</h2>
-    </header>
-    
-    <p class="text-[#a8a8b3] mb-6">Estatueta impressa em Resina de alta qualidade e pintada a mão.</p>
-    
-    <footer class="flex justify-between items-center">
-      <span class="text-xl font-bold text-white">R$ 750,00</span>
-      <button id="botao-comprar" class="hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors">Comprar</button>
-    </footer>
-  </article>
+  <main id="vitrine-produtos" class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1000px]">
+    </main>
 
   <script>
     window.addEventListener('DOMContentLoaded', () => {
       
-      const botao = document.getElementById('botao-comprar');
-      // 1. Selecionamos o elemento de texto do contador
+      // 1. Nossa Estrutura de Dados (A Lista/Array de Objetos)
+      const produtos = [
+        {
+          id: 'btn-seiya',
+          nome: "Seiya de Pegasus 1/6",
+          preco: "R$ 750,00",
+          descricao: "Estatueta impressa em Resina de alta qualidade e pintada a mão.",
+          img: "https://media.discordapp.net/attachments/1507080655404666892/1507080708881907933/WhatsApp_Image_2026-04-28_at_11.07.47_AM_2.jpeg?ex=6a1099c9&is=6a0f4849&hm=3a8cc68b7c605a81aac420e13ba360d13b53931cafeb04fbca22abd2620503df&=&format=webp&width=395&height=527"
+        },
+        {
+          id: 'btn-shiryu',
+          nome: "Shiryu de Dragão 1/6",
+          preco: "R$ 780,00",
+          descricao: "Edição limitada com base translúcida imitando o efeito do Cólera do Dragão.",
+          img: "https://images.unsplash.com/photo-1608889174633-41a1c22869e4?w=500&auto=format&fit=crop&q=60" // Imagem provisória
+        },
+        {
+          id: 'btn-hyoga',
+          nome: "Hyoga de Cisne 1/6",
+          preco: "R$ 720,00",
+          descricao: "Pintura automotiva perolada simulando a armadura de gelo.",
+          img: "https://images.unsplash.com/photo-1608889175123-8ec330b86f84?w=500&auto=format&fit=crop&q=60" // Imagem provisória
+        },
+        {
+          id: 'btn-babayaga',
+          nome: "John wick busto 1/6",
+          preco: "R$ 720,00",
+          descricao: "Pintura estilizada simulando as luzes do filme.",
+          img: "https://images.unsplash.com/photo-1608889175123-8ec330b86f84?w=500&auto=format&fit=crop&q=60" // Imagem provisória
+        }
+      ];
+
+      // 2. Selecionamos o container da vitrine no HTML
+      const containerVitrine = document.getElementById('vitrine-produtos');
       const contador = document.getElementById('contador-carrinho');
-      
-      // 2. Criamos a variável de "Estado" que começa em ZERO
       let quantidadeNoCarrinho = 0;
 
-      function adicionarAoCarrinho() {
-        // Ação 1: Mudar o visual do botão (o que você já fez!)
-        botao.innerText = "Adicionado! 🛒";
-        botao.classList.remove('bg-[#00adb5]', 'hover:bg-[#007a80]');
-        botao.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      // 3. O Loop Magnífico (Varrendo a nossa prateleira de dados)
+      produtos.forEach(produto => {
         
-        // Ação 2: Somar +1 na nossa variável matemática
-        quantidadeNoCarrinho = quantidadeNoCarrinho + 1;
+        // Criamos a estrutura do card em HTML injetando os dados do objeto da vez
+        const cardHTML = `
+          <article class="bg-[#202024] p-6 rounded-xl border border-[#323238] shadow-2xl flex flex-col justify-between">
+            <div>
+              <img src="${produto.img}" alt="${produto.nome}" class="w-full h-64 object-cover rounded-lg mb-4">
+              <h2 class="text-[#00adb5] text-2xl font-bold mb-2">${produto.nome}</h2>
+              <p class="text-[#a8a8b3] mb-6 text-sm">${produto.descricao}</p>
+            </div>
+            <footer class="flex justify-between items-center mt-auto">
+              <span class="text-xl font-bold text-white">${produto.preco}</span>
+              <button id="${produto.id}" class="botao-comprar hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors text-sm">
+                Comprar
+              </button>
+            </footer>
+          </article>
+        `;
         
-        // Ação 3: Atualizar o texto lá do topo com o novo valor da variável
-        contador.innerText = quantidadeNoCarrinho;
-      }
+        // Injetamos o card fabricado dentro da nossa vitrine principal
+        containerVitrine.innerHTML += cardHTML;
+      });
 
-      if (botao) {
-        botao.addEventListener('click', adicionarAoCarrinho);
-      }
+      // 4. Lógica do Clique para TODOS os botões gerados
+      const botoes = document.querySelectorAll('.botao-comprar');
       
+      botoes.forEach(botao => {
+        botao.addEventListener('click', () => {
+          quantidadeNoCarrinho++;
+          contador.innerText = quantidadeNoCarrinho;
+          
+          botao.innerText = "Adicionado! 🛒";
+          botao.classList.remove('bg-[#00adb5]', 'hover:bg-[#007a80]');
+          botao.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+        });
+      });
+
     });
   </script>
-
 </body>
 </html>
