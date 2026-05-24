@@ -25,25 +25,31 @@
     
     const containerVitrine = document.getElementById('vitrine-produtos');
     const contador = document.getElementById('contador-carrinho');
-    let quantidadeNoCarrinho = 0;
+    
+    // ESTADO DA APLICAÇÃO: Agora nossa lista guarda os OBJETOS dos produtos comprados
+    const carrinho = [];
 
-    // Coloque a sua URL RAW aqui dentro das aspas
-    fetch('https://gist.githubusercontent.com/nimbotauro/8134c692c539fba356c379a1d2f4871c/raw/1315b5a99bc9f3bd5836680e981384fc152c46df/gistfile1.txt')
+    // Buscando os dados puros da API (Simulando o padrão correto que você deduziu ontem!)
+    fetch('https://gist.githubusercontent.com/nimbotauro/8134c692c539fba356c379a1d2f4871c/raw/cb5bc3b2841e619fa3ae39193a169832873f070d/gistfile1.txt')
       .then(resposta => resposta.json())
       .then(produtos => {
         
-        // Loop para fabricar os cards
+        // Renderizando a vitrine
         produtos.forEach(produto => {
+          // Exibimos o preço formatado na tela, mas o dado original continua puro (número)
+          const precoFormatado = produto.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
           const cardHTML = `
             <article class="bg-[#202024] p-6 rounded-xl border border-[#323238] shadow-2xl flex flex-col justify-between">
               <div>
                 <img src="${produto.img}" alt="${produto.nome}" class="w-full h-64 object-cover rounded-lg mb-4">
                 <h2 class="text-[#00adb5] text-2xl font-bold mb-2">${produto.nome}</h2>
                 <p class="text-[#a8a8b3] mb-6 text-sm">${produto.descricao}</p>
+                <div class="text-xs text-zinc-500 mb-4">Material: ${produto.especificacoes.material} | Altura: ${produto.especificacoes.altura}</div>
               </div>
               <footer class="flex justify-between items-center mt-auto">
-                <span class="text-xl font-bold text-white">${produto.preco}</span>
-                <button id="${produto.id}" class="botao-comprar hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors text-sm">
+                <span class="text-xl font-bold text-white">${precoFormatado}</span>
+                <button id="${produto.id}" class="botao-comprar hover:bg-[#007a80] bg-[#00adb5] text-white py-2 px-4 rounded-md transition-colors text-sm font-bold">
                   Comprar
                 </button>
               </footer>
@@ -52,23 +58,48 @@
           containerVitrine.innerHTML += cardHTML;
         });
 
-        // Lógica do clique nos botões (dentro do fluxo do fetch)
+        // LÓGICA DO CLIQUE
         const botoes = document.querySelectorAll('.botao-comprar');
         botoes.forEach(botao => {
           botao.addEventListener('click', () => {
-            quantidadeNoCarrinho++;
-            contador.innerText = Drug; // Ops, mantendo o padrão: quantidadeNoCarrinho;
-            contador.innerText = quantidadeNoCarrinho;
-            botao.innerText = "Adicionado! 🛒";
+            const produtoId = botao.getAttribute('id');
+
+            // Encontramos o objeto completo do produto dentro da lista que veio da API
+            const produtoClicado = produtos.find(p => p.id === produtoId);
+
+            // REGRA DE NEGÓCIO: Checar se o produto já está no carrinho
+            const jaEstaNoCarrinho = carrinho.some(p => p.id === produtoId);
+            if (jaEstaNoCarrinho) {
+              alert("Este item já está no carrinho!");
+              return;
+            }
+
+            // Injetamos o OBJETO INTEIRO dentro do carrinho
+            carrinho.push(produtoClicado);
+
+            // ----- MÁGICA DOS MÉTODOS DE ARRAY (.reduce) -----
+            // O .reduce() percorre o carrinho e soma o .preco de cada objeto de forma limpa e rápida
+            const totalDinheiro = carrinho.reduce((soma, item) => soma + item.preco, 0);
+            // --------------------------------------------------
+
+            // Formatação e Atualização da UI
+            const totalFormatado = totalDinheiro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            contador.innerText = `(${carrinho.length}) ${totalFormatado}`;
+            
+            // Feedback visual do botão
+            botao.innerText = "No Carrinho 🛒";
+            botao.disabled = true;
             botao.classList.remove('bg-[#00adb5]', 'hover:bg-[#007a80]');
-            botao.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+            botao.classList.add('bg-zinc-600', 'cursor-not-allowed');
+
+            // PRINT DE ENGENHARIA: Olhe o seu console do navegador (F12) ao clicar!
+            console.log("Conteúdo atual do seu carrinho:", carrinho);
           });
         });
 
       })
-      .catch(erro => console.error("Erro ao buscar dados da API:", erro));
-
-  });
-</script>
+      .catch(erro => console.error("Erro ao processar e-commerce:", erro));
+   });
+  </script>
 </body>
 </html>
